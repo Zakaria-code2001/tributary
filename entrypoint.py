@@ -8,11 +8,9 @@ from loguru import logger
 HISTORY_LENGTH = 10
 DATA_KEY = "engine_temperature"
 
-# create a Flask server, and allow us to interact with it using the app variable
 app = Flask(__name__)
 
 
-# define an endpoint which accepts POST requests, and is reachable from the /record endpoint
 @app.route('/record', methods=['POST'])
 def record_engine_temperature():
     payload = request.get_json(force=True)
@@ -34,7 +32,6 @@ def record_engine_temperature():
     return {"success": True}, 200
 
 
-# we'll implement this in the next step!
 @app.route('/collect', methods=['POST'])
 def collect_engine_temperature():
     payload = request.get_json(force=True)
@@ -43,16 +40,12 @@ def collect_engine_temperature():
     current_engine_temperature = payload.get("engine_temperature")
     logger.info(f"The current engine temperature is: {current_engine_temperature}")
 
-    # Store the new temperature in the database
     database = redis.Redis(host="redis", port=6379, db=0, decode_responses=True)
     database.rpush(DATA_KEY, current_engine_temperature)
 
-    # Retrieve all engine temperature values from the database
     engine_temperature_values = database.lrange(DATA_KEY, 0, -1)
-    # Convert values to float
     engine_temperature_values = [float(temp) for temp in engine_temperature_values]
 
-    # Calculate the average engine temperature using a normal for loop
     total = 0
     number_of_temp = len(engine_temperature_values)
     for temp in engine_temperature_values:
