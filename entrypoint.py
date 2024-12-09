@@ -1,11 +1,10 @@
-# imports
-from flask import Flask
+# import dependencies
 import json
 import redis as redis
 from flask import Flask, request
 from loguru import logger
 
-# Constants
+# define constants
 HISTORY_LENGTH = 10
 DATA_KEY = "engine_temperature"
 
@@ -13,9 +12,6 @@ DATA_KEY = "engine_temperature"
 app = Flask(__name__)
 
 
-@app.route('/hello')
-def hello():
-    return {"success": True}, 200
 # define an endpoint which accepts POST requests, and is reachable from the /record endpoint
 @app.route('/record', methods=['POST'])
 def record_engine_temperature():
@@ -38,8 +34,7 @@ def record_engine_temperature():
     return {"success": True}, 200
 
 
-
-# practically identical to the above
+# we'll implement this in the next step!
 @app.route('/collect', methods=['POST'])
 def collect_engine_temperature():
     return {"success": True}, 200
